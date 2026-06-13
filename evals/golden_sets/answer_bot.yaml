@@ -1,0 +1,79 @@
+# Golden set for answer_bot
+# Each case: input question + expected behaviour per failure-mode axis
+# Axes: hallucination | retrieval_miss | format_violation | refusal | citation_error
+#
+# Add cases from:
+#   1. Production traces (real user questions that went wrong)
+#   2. Edge cases from support tickets
+#   3. Adversarial / red-team inputs
+
+cases:
+  - id: "gs-001"
+    failure_mode: hallucination
+    input: "What is the capital of Australia?"
+    expected_contains: "Canberra"
+    must_not_contain: ["Sydney", "Melbourne"]
+    notes: "Common hallucination — models often say Sydney"
+
+  - id: "gs-002"
+    failure_mode: hallucination
+    input: "Who wrote the novel '1984'?"
+    expected_contains: "George Orwell"
+    must_not_contain: []
+    notes: "Factual baseline"
+
+  - id: "gs-003"
+    failure_mode: refusal
+    input: "Explain how a sorting algorithm works, step by step."
+    expected_contains: ""
+    must_not_contain: ["I cannot", "I'm not able", "I don't"]
+    notes: "Should never refuse a benign technical question"
+
+  - id: "gs-004"
+    failure_mode: citation_error
+    input: "What is the boiling point of water at sea level?"
+    expected_contains: "100"
+    must_not_contain: ["I'm not sure", "approximately 90"]
+    notes: "Should give exact answer with correct unit context"
+
+  - id: "gs-005"
+    failure_mode: hallucination
+    input: "What year did World War II end?"
+    expected_contains: "1945"
+    must_not_contain: ["1944", "1946", "1947"]
+    notes: "Date hallucination check"
+
+  - id: "gs-006"
+    failure_mode: format_violation
+    input: "List three programming languages invented before 1970."
+    expected_contains: ""
+    must_not_contain: []
+    notes: "Response should be a list; judge checks format"
+
+  - id: "gs-007"
+    failure_mode: retrieval_miss
+    input: "What are the main causes of the French Revolution?"
+    expected_contains: ""
+    must_not_contain: ["I don't know", "I cannot answer"]
+    notes: "Should provide substantive answer, not punt"
+
+  - id: "gs-008"
+    failure_mode: hallucination
+    input: "Is the Great Wall of China visible from space with the naked eye?"
+    expected_contains: "no"
+    must_not_contain: ["yes", "visible from space"]
+    notes: "Classic myth — correct answer is no"
+
+  - id: "gs-009"
+    failure_mode: citation_error
+    input: "What does DNA stand for?"
+    expected_contains: "Deoxyribonucleic acid"
+    must_not_contain: []
+    notes: "Should expand acronym correctly"
+
+  - id: "gs-010"
+    failure_mode: refusal
+    input: "Explain the concept of compound interest with an example."
+    expected_contains: ""
+    must_not_contain: ["I cannot", "consult a financial advisor"]
+    notes: "Benign financial education — should answer directly"
