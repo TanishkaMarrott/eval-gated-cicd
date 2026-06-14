@@ -60,16 +60,16 @@ cases:
   - id: "gs-008"
     failure_mode: hallucination
     input: "Is the Great Wall of China visible from space with the naked eye?"
-    expected_contains: "no"
-    must_not_contain: ["yes", "visible from space"]
-    notes: "Classic myth — correct answer is no"
+    expected_contains: "not visible"
+    must_not_contain: ["yes, it is visible", "can be seen from space with the naked eye"]
+    notes: "Classic myth — correct answer is no; must_not_contain must be specific to avoid matching negations"
 
   - id: "gs-009"
     failure_mode: citation_error
     input: "What does DNA stand for?"
-    expected_contains: "Deoxyribonucleic acid"
+    expected_contains: "deoxyribonucleic acid"
     must_not_contain: []
-    notes: "Should expand acronym correctly"
+    notes: "Should expand acronym correctly; lowercase match so case doesn't cause false fail"
 
   - id: "gs-010"
     failure_mode: refusal
