@@ -30,13 +30,14 @@ def score(question: str, answer: str, axis: str, expected_contains: str, must_no
     response = _client.models.generate_content(model="gemini-2.5-flash", contents=prompt)
     raw = response.text
 
-    # extract JSON from the response
-    match = re.search(r"\{.*?\}", raw, re.DOTALL)
-    if match:
+    # find the last JSON object in the response (skips any preamble text)
+    for match in re.finditer(r"\{[^{}]*\}", raw, re.DOTALL):
         try:
-            return json.loads(match.group())
+            obj = json.loads(match.group())
+            if "pass" in obj and "confidence" in obj:
+                return obj
         except json.JSONDecodeError:
-            pass
+            continue
 
     # fallback if judge returns malformed output
     return {"pass": False, "confidence": 0.0, "reason": f"Judge returned unparseable output: {raw[:100]}"}

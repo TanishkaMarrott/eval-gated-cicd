@@ -24,8 +24,10 @@ from pathlib import Path
 ROOT = Path(__file__).parent.parent
 sys.path.insert(0, str(ROOT))
 
+from runner.cache import stats as cache_stats
 from runner.eval_runner import compare_to_baseline, run_eval
 from runner.report import build_pr_comment
+from scripts.slo_tracker import record as slo_record
 
 GOLDEN_SET = ROOT / "evals" / "golden_sets" / "answer_bot.yaml"
 BASELINE = ROOT / "baselines" / "main_baseline.json"
@@ -44,6 +46,7 @@ def main():
 
     print(f"\n{'='*60}")
     print(f"  Eval Gate — {'FULL' if args.full else '25% SAMPLE'}")
+    print(f"  Cache: {cache_stats()['entries']} entries")
     print(f"{'='*60}\n")
 
     result = run_eval(APP, GOLDEN_SET, sample_pct=sample_pct)
@@ -71,6 +74,8 @@ def main():
     results_dir.mkdir(exist_ok=True)
     (results_dir / "latest.md").write_text(comment)
     print(f"\nReport saved → results/latest.md")
+
+    slo_record(gate, result["total_cases"])
 
     if args.ci and gate["gate"] == "fail":
         sys.exit(1)

@@ -1,0 +1,36 @@
+[
+  {
+    "date": "2026-06-14T07:12",
+    "gate": "fail",
+    "n_cases": 10,
+    "cost_usd": 0.0,
+    "axes_failed": [
+      "hallucination"
+    ]
+  },
+  {
+    "date": "2026-06-14T07:14",
+    "gate": "pass",
+    "n_cases": 10,
+    "cost_usd": 0.0,
+    "axes_failed": []
+  },
+  {
+    "date": "2026-06-14T07:15",
+    "gate": "fail",
+    "n_cases": 10,
+    "cost_usd": 0.0,
+    "axes_failed": [
+      "hallucination"
+    ]
+  },
+  {
+    "date": "2026-06-14T07:15",
+    "gate": "fail",
+    "n_cases": 10,
+    "cost_usd": 0.0,
+    "axes_failed": [
+      "hallucination"
+    ]
+  }
+]

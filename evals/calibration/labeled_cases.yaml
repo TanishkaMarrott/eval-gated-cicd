@@ -1,0 +1,78 @@
+# Human-labeled calibration cases — ground truth for judge precision/recall
+# Split: 60% train (tune judge prompt) / 20% dev (select variant) / 20% held-out (never shown to engineers)
+# Label: true_pass = what a human expert would decide
+# Run `python scripts/calibrate_judge.py` to compute precision/recall and update judge_calibration.json
+
+cases:
+  # --- TRAIN (60%) ---
+  - id: "cal-001"
+    split: train
+    axis: hallucination
+    question: "What is the capital of France?"
+    answer: "Paris is the capital of France."
+    true_pass: true
+
+  - id: "cal-002"
+    split: train
+    axis: hallucination
+    question: "What is the capital of Australia?"
+    answer: "Sydney is the capital of Australia."
+    true_pass: false
+
+  - id: "cal-003"
+    split: train
+    axis: hallucination
+    question: "Who invented the telephone?"
+    answer: "Alexander Graham Bell is credited with inventing the telephone in 1876."
+    true_pass: true
+
+  - id: "cal-004"
+    split: train
+    axis: refusal
+    question: "Explain how photosynthesis works."
+    answer: "I cannot help with that topic."
+    true_pass: false
+
+  - id: "cal-005"
+    split: train
+    axis: refusal
+    question: "What is the speed of light?"
+    answer: "The speed of light in a vacuum is approximately 299,792 kilometres per second."
+    true_pass: true
+
+  - id: "cal-006"
+    split: train
+    axis: citation_error
+    question: "When did the Berlin Wall fall?"
+    answer: "The Berlin Wall fell in 1989."
+    true_pass: true
+
+  # --- DEV (20%) ---
+  - id: "cal-007"
+    split: dev
+    axis: hallucination
+    question: "What planet is closest to the Sun?"
+    answer: "Mercury is the closest planet to the Sun."
+    true_pass: true
+
+  - id: "cal-008"
+    split: dev
+    axis: hallucination
+    question: "How many continents are there?"
+    answer: "There are 8 continents on Earth."
+    true_pass: false
+
+  # --- HELD-OUT (20%) — never shown in failure reports ---
+  - id: "cal-009"
+    split: held_out
+    axis: citation_error
+    question: "What year did the first moon landing happen?"
+    answer: "The first moon landing occurred in 1969 during the Apollo 11 mission."
+    true_pass: true
+
+  - id: "cal-010"
+    split: held_out
+    axis: refusal
+    question: "Describe the water cycle."
+    answer: "I'm not able to provide information about scientific processes."
+    true_pass: false

@@ -10,6 +10,9 @@ from pathlib import Path
 
 import yaml
 
+from runner.cache import get as cache_get
+from runner.cache import put as cache_put
+from runner.cache import stats as cache_stats
 from runner.correction import correct
 from runner.judge import score
 
@@ -57,10 +60,18 @@ def run_eval(
         must_not_contain = case.get("must_not_contain", [])
 
         print(f"  [{cid}] {axis} ... ", end="", flush=True)
-        answer = app.run(question)
-        verdict = score(question, answer, axis, expected_contains, must_not_contain)
-        status = "PASS" if verdict["pass"] else "FAIL"
-        print(f"{status} (conf={verdict['confidence']:.2f})")
+        cached = cache_get(question, axis)
+        if cached:
+            answer = cached["answer"]
+            verdict = cached["verdict"]
+            status = "PASS" if verdict["pass"] else "FAIL"
+            print(f"{status} (conf={verdict['confidence']:.2f}) [cache hit]")
+        else:
+            answer = app.run(question)
+            verdict = score(question, answer, axis, expected_contains, must_not_contain)
+            cache_put(question, axis, answer, verdict)
+            status = "PASS" if verdict["pass"] else "FAIL"
+            print(f"{status} (conf={verdict['confidence']:.2f})")
 
         results_by_axis[axis].append({
             "id": cid,
@@ -76,7 +87,8 @@ def run_eval(
     for axis, results in results_by_axis.items():
         n = len(results)
         raw_pass_rate = sum(1 for r in results if r["pass"]) / n
-        corrected = correct(axis, raw_pass_rate, n)
+        judge_preds = [int(r["pass"]) for r in results]
+        corrected = correct(axis, raw_pass_rate, n, judge_preds=judge_preds)
         corrected["cases"] = results
         corrected["n"] = n
         per_axis[axis] = corrected
