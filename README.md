@@ -1,4 +1,4 @@
-# Eval-Gated CI/CD for LLM Applications
+# Eval-Gated CI/CD for AI Products
 
 Every PR that touches prompt logic runs a golden-set eval before the merge button appears.
 A bad prompt change gets caught in CI — not in production after a customer notices.
