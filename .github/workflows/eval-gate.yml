@@ -28,7 +28,7 @@ jobs:
       - name: Run evals
         id: eval
         env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
           python scripts/run_evals.py --ci 2>&1 | tee eval_output.txt
           echo "exit_code=${PIPESTATUS[0]}" >> $GITHUB_OUTPUT

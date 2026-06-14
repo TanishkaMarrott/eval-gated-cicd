@@ -34,7 +34,7 @@ APP = "examples.answer_bot"
 
 def main():
     parser = argparse.ArgumentParser(description="Run eval gate")
-    parser.add_argument("--full", action="store_true", help="Run 100% of golden set (default: 25%)")
+    parser.add_argument("--full", action="store_true", help="Run 100%% of golden set (default: 25%%)")
     parser.add_argument("--update-baseline", action="store_true", help="Store current result as new baseline")
     parser.add_argument("--ci", action="store_true", help="Exit 1 on gate failure (for CI)")
     parser.add_argument("--tolerance", type=float, default=0.02, help="Regression tolerance (default 0.02 = 2pp)")

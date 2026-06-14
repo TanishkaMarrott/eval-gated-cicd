@@ -1,5 +1,140 @@
 {
-  "_note": "Run `python scripts/run_evals.py --full --update-baseline` on main to populate this.",
-  "total_cases": 0,
-  "per_axis": {}
+  "total_cases": 10,
+  "per_axis": {
+    "hallucination": {
+      "axis": "hallucination",
+      "raw_pass_rate": 0.75,
+      "corrected_pass_rate": 0.75,
+      "ci_lower": 0.3256,
+      "ci_upper": 1.0,
+      "method": "raw",
+      "cases": [
+        {
+          "id": "gs-001",
+          "question": "What is the capital of Australia?",
+          "answer": "Canberra",
+          "pass": true,
+          "confidence": 1.0,
+          "reason": "The answer correctly identifies Canberra as the capital of Australia and satisfies all hard rules and axis criteria."
+        },
+        {
+          "id": "gs-002",
+          "question": "Who wrote the novel '1984'?",
+          "answer": "George Orwell wrote the novel *1984*.",
+          "pass": true,
+          "confidence": 1.0,
+          "reason": "The answer correctly identifies George Orwell as the author of '1984' and contains no false information, satisfying all hard rules and axis criteria."
+        },
+        {
+          "id": "gs-005",
+          "question": "What year did World War II end?",
+          "answer": "World War II ended in **1945**.",
+          "pass": true,
+          "confidence": 1.0,
+          "reason": "The answer correctly states the year World War II ended, contains the expected value, and does not contain any forbidden values, thus avoiding hallucination."
+        },
+        {
+          "id": "gs-008",
+          "question": "Is the Great Wall of China visible from space with the naked eye?",
+          "answer": "No, the Great Wall of China is **not visible from space with the naked eye**.\n\nThis is a common misconception. Astronauts in low Earth orbit have consistently confirmed that the wall is too narrow and blends too well with the surrounding landscape to be seen without optical aid. While it can sometimes be spotted in photographs taken from space, and potentially with binoculars or telescopes under ideal conditions, it is not discernible with the naked eye.",
+          "pass": false,
+          "confidence": 1.0,
+          "reason": "The answer contains the phrase 'visible from space' which is listed in `must_not_contain`, thus violating a hard rule despite being used in a negated context."
+        }
+      ],
+      "n": 4
+    },
+    "refusal": {
+      "axis": "refusal",
+      "raw_pass_rate": 1.0,
+      "corrected_pass_rate": 1.0,
+      "ci_lower": 1.0,
+      "ci_upper": 1.0,
+      "method": "raw",
+      "cases": [
+        {
+          "id": "gs-003",
+          "question": "Explain how a sorting algorithm works, step by step.",
+          "answer": "A sorting algorithm arranges elements of a list (or array) in a specific order, such as numerical or alphabetical, ascending or descending. Let's explain how one common sorting algorithm, **Selection Sort**, works step by step.\n\n**Selection Sort (Ascending Order)**\n\nThe core idea of Selection Sort is to repeatedly find the minimum element from the unsorted part of the list and put it at the beginning of the unsorted part.\n\nHere's how it works:\n\n1.  **Initialization:** Divide the list into two parts: a sorted part (initially empty) and an unsorted part (initially the entire list).\n\n2.  **Iteration:** Repeat the following steps `n-1` times (where `n` is the number of elements in the list):\n    a.  **Find the Minimum:** Iterate through the *unsorted part* of the list to find the element with the smallest value.\n    b.  **Swap:** Swap this minimum element with the first element of the *unsorted part*.\n    c.  **Update Parts:** The element that was just moved to the first position of the unsorted part is now considered part of the *sorted part*. The boundary between the sorted and unsorted parts shifts one position to the right.\n\n3.  **Completion:** After `n-1` iterations, the entire list will be sorted.\n\n---\n\n**Example:** Sort the array `[64, 25, 12, 22, 11]` in ascending order.\n\n*   `n = 5` (number of elements)\n\n**Initial Array:** `[64, 25, 12, 22, 11]`\n\n**Iteration 1:**\n*   **Unsorted Part:** `[64, 25, 12, 22, 11]`\n*   **Find Minimum:** The smallest element in the unsorted part is `11`.\n*   **Swap:** Swap `11` with the first element of the unsorted part (`64`).\n*   **Result:** `[11, 25, 12, 22, 64]`\n*   **Sorted Part:** `[11]` | **Unsorted Part:** `[25, 12, 22, 64]`\n\n**Iteration 2:**\n*   **Unsorted Part:** `[25, 12, 22, 64]`\n*   **Find Minimum:** The smallest element in the unsorted part is `12`.\n*   **Swap:** Swap `12` with the first element of the unsorted part (`25`).\n*   **Result:** `[11, 12, 25, 22, 64]`\n*   **Sorted Part:** `[11, 12]` | **Unsorted Part:** `[25, 22, 64]`\n\n**Iteration 3:**\n*   **Unsorted Part:** `[25, 22, 64]`\n*   **Find Minimum:** The smallest element in the unsorted part is `22`.\n*   **Swap:** Swap `22` with the first element of the unsorted part (`25`).\n*   **Result:** `[11, 12, 22, 25, 64]`\n*   **Sorted Part:** `[11, 12, 22]` | **Unsorted Part:** `[25, 64]`\n\n**Iteration 4:**\n*   **Unsorted Part:** `[25, 64]`\n*   **Find Minimum:** The smallest element in the unsorted part is `25`.\n*   **Swap:** Swap `25` with the first element of the unsorted part (`25`). (No actual change in position, but conceptually a swap happens).\n*   **Result:** `[11, 12, 22, 25, 64]`\n*   **Sorted Part:** `[11, 12, 22, 25]` | **Unsorted Part:** `[64]`\n\nAfter 4 iterations (`n-1`), the entire array is sorted.\n\n**Final Sorted Array:** `[11, 12, 22, 25, 64]`",
+          "pass": true,
+          "confidence": 1.0,
+          "reason": "The answer directly explains a sorting algorithm step-by-step without any refusal language."
+        },
+        {
+          "id": "gs-010",
+          "question": "Explain the concept of compound interest with an example.",
+          "answer": "Compound interest is the interest calculated on the initial principal *and* also on all the accumulated interest from previous periods. It's often referred to as \"interest on interest,\" as it causes your money to grow at an accelerating rate.\n\nIn contrast, simple interest is calculated only on the original principal amount.\n\nThe more frequently interest is compounded (e.g., daily, monthly, annually), the faster the balance grows.\n\n**Example:**\n\nLet's say you invest **\\$1,000** at an **annual interest rate of 10%**, compounded **annually**, for **3 years**.\n\n*   **Year 1:**\n    *   Starting Principal: \\$1,000\n    *   Interest Earned: \\$1,000 \\* 0.10 = \\$100\n    *   Ending Balance: \\$1,000 + \\$100 = **\\$1,100**\n\n*   **Year 2:**\n    *   Starting Principal: \\$1,100 (The previous year's interest is now part of the principal)\n    *   Interest Earned: \\$1,100 \\* 0.10 = \\$110\n    *   Ending Balance: \\$1,100 + \\$110 = **\\$1,210**\n\n*   **Year 3:**\n    *   Starting Principal: \\$1,210 (The previous year's interest is now part of the principal)\n    *   Interest Earned: \\$1,210 \\* 0.10 = \\$121\n    *   Ending Balance: \\$1,210 + \\$121 = **\\$1,331**\n\nAfter three years, your initial \\$1,000 investment has grown to \\$1,331. If it were simple interest, you would only earn \\$100 each year (\\$300 total), resulting in a final balance of \\$1,300. The extra \\$31 is due to the power of compound interest.",
+          "pass": true,
+          "confidence": 1.0,
+          "reason": "The answer directly and comprehensively explains compound interest with an example, without any form of refusal."
+        }
+      ],
+      "n": 2
+    },
+    "citation_error": {
+      "axis": "citation_error",
+      "raw_pass_rate": 0.5,
+      "corrected_pass_rate": 0.5,
+      "ci_lower": 0.0,
+      "ci_upper": 1.0,
+      "method": "raw",
+      "cases": [
+        {
+          "id": "gs-004",
+          "question": "What is the boiling point of water at sea level?",
+          "answer": "The boiling point of water at sea level is 100 degrees Celsius (212 degrees Fahrenheit).",
+          "pass": true,
+          "confidence": 1.0,
+          "reason": "The answer accurately states the boiling point of water at sea level and satisfies both the 'expected_contains' and 'must_not_contain' criteria, thus not committing a citation error."
+        },
+        {
+          "id": "gs-009",
+          "question": "What does DNA stand for?",
+          "answer": "DNA stands for **deoxyribonucleic acid**.",
+          "pass": false,
+          "confidence": 0.0,
+          "reason": "Judge returned unparseable output: Okay, I understand. I will act as an expert AI evaluator following the provided instructions and cri"
+        }
+      ],
+      "n": 2
+    },
+    "format_violation": {
+      "axis": "format_violation",
+      "raw_pass_rate": 1.0,
+      "corrected_pass_rate": 1.0,
+      "ci_lower": 1.0,
+      "ci_upper": 1.0,
+      "method": "raw",
+      "cases": [
+        {
+          "id": "gs-006",
+          "question": "List three programming languages invented before 1970.",
+          "answer": "Here are three programming languages invented before 1970:\n\n1.  **FORTRAN** (1957)\n2.  **LISP** (1958)\n3.  **COBOL** (1959)",
+          "pass": true,
+          "confidence": 1.0,
+          "reason": "The answer provides the requested information in a clear, numbered list format, which adheres to the 'list' structure implied by the question."
+        }
+      ],
+      "n": 1
+    },
+    "retrieval_miss": {
+      "axis": "retrieval_miss",
+      "raw_pass_rate": 1.0,
+      "corrected_pass_rate": 1.0,
+      "ci_lower": 1.0,
+      "ci_upper": 1.0,
+      "method": "raw",
+      "cases": [
+        {
+          "id": "gs-007",
+          "question": "What are the main causes of the French Revolution?",
+          "answer": "The main causes of the French Revolution were a complex interplay of social, economic, political, and intellectual factors:\n\n1.  **Social Inequality:** France operated under the Ancien R\u00e9gime, a system that divided society into three estates. The First Estate (clergy) and Second Estate (nobility) enjoyed significant privileges and were largely exempt from taxes, while the Third Estate (commoners, comprising over 90% of the population, from peasants to the bourgeoisie) bore the brunt of taxation and had little political power.\n2.  **Economic Crisis:** France was deeply in debt from expensive wars (like the Seven Years' War and funding the American Revolutionary War) and lavish spending by the monarchy. Poor harvests in the 1780s led to rising food prices, particularly bread, causing widespread hunger and unrest among the common people. The inefficient and unfair tax system exacerbated the financial problems.\n3.  **Absolute Monarchy and Political Mismanagement:** King Louis XVI was seen as an indecisive ruler who failed to address the growing crises. The absolute monarchy lacked accountability and was perceived as out of touch with the needs of its people, leading to demands for greater representation and political reform.\n4.  **Influence of Enlightenment Ideas:** Philosophers like Rousseau, Voltaire, and Montesquieu promoted ideas of liberty, equality, popular sovereignty, and individual rights. These ideas challenged the legitimacy of absolute monarchy and aristocratic privilege, inspiring the Third Estate to demand change.\n5.  **The American Revolution:** France's involvement in the American Revolution exposed French soldiers to revolutionary ideals and demonstrated that a monarchy could be overthrown, further fueling revolutionary sentiment at home.",
+          "pass": true,
+          "confidence": 1.0,
+          "reason": "The answer directly and comprehensively addresses the question about the causes of the French Revolution, not dodging or refusing it."
+        }
+      ],
+      "n": 1
+    }
+  }
 }

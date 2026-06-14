@@ -1,14 +1,15 @@
 """LLM-as-judge: scores one golden-set case on its failure-mode axis."""
 
 import json
+import os
 import re
 from pathlib import Path
 
-import anthropic
+from google import genai
 
 JUDGE_PROMPT_PATH = Path(__file__).parent.parent / "evals" / "judge_prompts" / "quality_judge.md"
 
-client = anthropic.Anthropic()
+_client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
 
 
 def _load_judge_prompt() -> str:
@@ -26,13 +27,8 @@ def score(question: str, answer: str, axis: str, expected_contains: str, must_no
     prompt = prompt.replace("{expected_contains}", expected_contains or "(none)")
     prompt = prompt.replace("{must_not_contain}", ", ".join(must_not_contain) if must_not_contain else "(none)")
 
-    response = client.messages.create(
-        model="claude-haiku-4-5-20251001",  # cheap judge — Haiku is fast and cheap
-        max_tokens=256,
-        messages=[{"role": "user", "content": prompt}],
-    )
-
-    raw = response.content[0].text
+    response = _client.models.generate_content(model="gemini-2.5-flash", contents=prompt)
+    raw = response.text
 
     # extract JSON from the response
     match = re.search(r"\{.*?\}", raw, re.DOTALL)
