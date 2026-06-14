@@ -12,11 +12,18 @@ SYSTEM_PROMPT = """You are a helpful assistant that answers questions concisely 
 When you don't know something, say so clearly rather than guessing.
 Always cite if a claim is uncertain."""
 
-_client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
+_client = None
+
+
+def _get_client():
+    global _client
+    if _client is None:
+        _client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
+    return _client
 
 
 def run(question: str) -> str:
-    response = _client.models.generate_content(
+    response = _get_client().models.generate_content(
         model="gemini-2.5-flash",
         contents=question,
         config=types.GenerateContentConfig(system_instruction=SYSTEM_PROMPT),

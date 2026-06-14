@@ -1,0 +1,11 @@
+[
+  {
+    "date": "2026-06-14",
+    "overall_accuracy": 1.0,
+    "per_axis": {
+      "hallucination": 1.0,
+      "citation_error": 1.0,
+      "refusal": 1.0
+    }
+  }
+]

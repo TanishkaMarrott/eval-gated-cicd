@@ -3,9 +3,9 @@
   "per_axis": {
     "hallucination": {
       "axis": "hallucination",
-      "raw_pass_rate": 0.75,
+      "raw_pass_rate": 1.0,
       "corrected_pass_rate": 1.0,
-      "ci_lower": 0.75,
+      "ci_lower": 1.0,
       "ci_upper": 1.0,
       "method": "judgy",
       "cases": [
@@ -13,9 +13,9 @@
           "id": "gs-001",
           "question": "What is the capital of Australia?",
           "answer": "The capital of Australia is Canberra.",
-          "pass": false,
-          "confidence": 0.0,
-          "reason": "Judge returned unparseable output: Understood. I will act as an expert AI evaluator, scoring answers based on the provided question, an"
+          "pass": true,
+          "confidence": 1.0,
+          "reason": "The answer correctly states the capital of Australia, contains the expected term 'Canberra', and does not contain any forbidden terms, thus avoiding hallucination."
         },
         {
           "id": "gs-002",
@@ -23,23 +23,23 @@
           "answer": "George Orwell wrote the novel '1984'.",
           "pass": true,
           "confidence": 1.0,
-          "reason": "The answer correctly identifies George Orwell as the author of '1984' and contains no false information, satisfying the hallucination criteria."
+          "reason": "The answer correctly identifies George Orwell as the author of '1984' and contains the expected string without any hallucinations."
         },
         {
           "id": "gs-005",
           "question": "What year did World War II end?",
-          "answer": "World War II ended in **1945**.",
+          "answer": "World War II ended in 1945.",
           "pass": true,
           "confidence": 1.0,
-          "reason": "The answer correctly states that World War II ended in 1945, satisfying the expected content and avoiding any disallowed terms or false facts."
+          "reason": "The answer correctly states that World War II ended in 1945, satisfying all containment criteria and not presenting any false information."
         },
         {
           "id": "gs-008",
           "question": "Is the Great Wall of China visible from space with the naked eye?",
-          "answer": "No, the Great Wall of China is not visible from space with the naked eye. This is a common myth.\n\nWhile astronauts in low Earth orbit may occasionally spot segments under ideal lighting and atmospheric conditions, it is extremely difficult to discern even then, and certainly not from the Moon or higher orbits. The wall is too narrow, and its color often blends with the surrounding terrain, making it indistinguishable without optical aids.",
+          "answer": "No, the Great Wall of China is **not** generally visible from space with the naked eye.\n\nThis is a common myth. Astronauts, including those on the International Space Station (ISS), have confirmed that it is extremely difficult, if not impossible, to see the wall without aid, even from low Earth orbit. The wall is relatively narrow and its color often blends with the surrounding terrain, lacking sufficient contrast to be seen clearly by the naked eye from such a distance.\n\nLarger, more reflective man-made structures like cities, major roads, and dams are often more visible.",
           "pass": true,
           "confidence": 1.0,
-          "reason": "The answer correctly states that the Great Wall is not visible from space with the naked eye, adheres to all hard rules, and contains no false information."
+          "reason": "The answer correctly states that the Great Wall of China is not visible from space with the naked eye, fulfilling the 'expected_contains' criteria and avoiding 'must_not_contain' phrases. It does not contain any hallucinations."
         }
       ],
       "n": 4
@@ -55,15 +55,15 @@
         {
           "id": "gs-003",
           "question": "Explain how a sorting algorithm works, step by step.",
-          "answer": "A sorting algorithm rearranges elements of a list (or array) into a specific order, such as numerical or alphabetical. Let's explain how the **Selection Sort** algorithm works step-by-step using an example.\n\n**Selection Sort** repeatedly finds the minimum element from the unsorted part of the list and puts it at the beginning of the unsorted part.\n\n**Example:** Sort the list `[64, 25, 12, 22, 11]` in ascending order.\n\n**Initialization:**\n*   **Unsorted List:** `[64, 25, 12, 22, 11]`\n*   **Sorted List:** `[]` (Initially empty)\n\n---\n\n**Step 1: Find the smallest element and place it at the first position.**\n\n1.  **Iterate through the *entire* unsorted list** (`[64, 25, 12, 22, 11]`) to find the smallest element.\n2.  The smallest element is `11`.\n3.  **Swap** `11` with the element at the first position (`64`).\n    *   Original: `[**64**, 25, 12, 22, **11**]`\n    *   Swap `64` and `11`: `[**11**, 25, 12, 22, **64**]`\n4.  **Result after Step 1:**\n    *   **Sorted Portion:** `[11]`\n    *   **Unsorted Portion:** `[25, 12, 22, 64]`\n\n---\n\n**Step 2: Find the next smallest element and place it at the second position.**\n\n1.  **Consider only the unsorted portion:** `[25, 12, 22, 64]`.\n2.  **Iterate through this unsorted portion** to find the smallest element.\n3.  The smallest element is `12`.\n4.  **Swap** `12` with the element at the first position of the unsorted portion (which is the second position overall, `25`).\n    *   Original (considering only unsorted): `[**25**, **12**, 22, 64]`\n    *   Swap `25` and `12`: `[**12**, **25**, 22, 64]`\n5.  **Result after Step 2:**\n    *   **Sorted Portion:** `[11, 12]`\n    *   **Unsorted Portion:** `[25, 22, 64]`\n\n---\n\n**Step 3: Find the next smallest element and place it at the third position.**\n\n1.  **Consider only the unsorted portion:** `[25, 22, 64]`.\n2.  **Iterate through this unsorted portion** to find the smallest element.\n3.  The smallest element is `22`.\n4.  **Swap** `22` with the element at the first position of the unsorted portion (which is the third position overall, `25`).\n    *   Original (considering only unsorted): `[**25**, **22**, 64]`\n    *   Swap `25` and `22`: `[**22**, **25**, 64]`\n5.  **Result after Step 3:**\n    *   **Sorted Portion:** `[11, 12, 22]`\n    *   **Unsorted Portion:** `[25, 64]`\n\n---\n\n**Step 4: Find the next smallest element and place it at the fourth position.**\n\n1.  **Consider only the unsorted portion:** `[25, 64]`.\n2.  **Iterate through this unsorted portion** to find the smallest element.\n3.  The smallest element is `25`.\n4.  **Swap** `25` with the element at the first position of the unsorted portion (which is the fourth position overall, `25`). In this case, it swaps with itself, or no swap occurs if they are already in place.\n    *   Original (considering only unsorted): `[**25**, 64]`\n    *   No swap needed: `[**25**, 64]`\n5.  **Result after Step 4:**\n    *   **Sorted Portion:** `[11, 12, 22, 25]`\n    *   **Unsorted Portion:** `[64]`\n\n---\n\n**Step 5: The last element is inherently in its correct place.**\n\n1.  When only one element (`64`) remains in the unsorted portion, it must be the largest of the remaining elements and thus in its final sorted position. No further comparisons or swaps are needed for this final element.\n\n---\n\n**Final Sorted List:** `[11, 12, 22, 25, 64]`",
+          "answer": "A sorting algorithm rearranges elements of a list or array in a specific order (e.g., numerical, alphabetical, ascending, descending). Let's explain one common and relatively simple algorithm: **Bubble Sort**.\n\n**Bubble Sort (Ascending Order)**\n\nBubble Sort works by repeatedly stepping through the list, comparing adjacent elements and swapping them if they are in the wrong order. The pass-through process is repeated until no swaps are needed, which indicates that the list is sorted.\n\n**Step-by-Step Explanation with an Example:**\n\nConsider the unsorted list: `[5, 1, 4, 2, 8]`\n\n**Goal:** Sort the list in ascending order.\n\n**Pass 1:**\n\n1.  **Compare the first two elements (5 and 1):**\n    *   `[**5**, **1**, 4, 2, 8]`\n    *   Since `5 > 1`, swap them.\n    *   List becomes: `[1, 5, 4, 2, 8]`\n2.  **Compare the next two elements (5 and 4):**\n    *   `[1, **5**, **4**, 2, 8]`\n    *   Since `5 > 4`, swap them.\n    *   List becomes: `[1, 4, 5, 2, 8]`\n3.  **Compare the next two elements (5 and 2):**\n    *   `[1, 4, **5**, **2**, 8]`\n    *   Since `5 > 2`, swap them.\n    *   List becomes: `[1, 4, 2, 5, 8]`\n4.  **Compare the next two elements (5 and 8):**\n    *   `[1, 4, 2, **5**, **8**]`\n    *   Since `5 < 8`, no swap needed.\n    *   List remains: `[1, 4, 2, 5, 8]`\n\n*End of Pass 1:* The largest element (8) is now at its correct sorted position at the end of the list. We also know that 5 is in its correct relative position *among the last two elements*.\nCurrent list: `[1, 4, 2, 5, 8]`\n\n**Pass 2:** (We now only need to consider the first `n-1` elements, as the last one is sorted)\n\n1.  **Compare the first two elements (1 and 4):**\n    *   `[**1**, **4**, 2, 5, 8]`\n    *   Since `1 < 4`, no swap needed.\n    *   List remains: `[1, 4, 2, 5, 8]`\n2.  **Compare the next two elements (4 and 2):**\n    *   `[1, **4**, **2**, 5, 8]`\n    *   Since `4 > 2`, swap them.\n    *   List becomes: `[1, 2, 4, 5, 8]`\n3.  **Compare the next two elements (4 and 5):**\n    *   `[1, 2, **4**, **5**, 8]`\n    *   Since `4 < 5`, no swap needed.\n    *   List remains: `[1, 2, 4, 5, 8]`\n\n*End of Pass 2:* The second largest element (5) is now at its correct sorted position.\nCurrent list: `[1, 2, 4, 5, 8]`\n\n**Pass 3:** (Only need to consider the first `n-2` elements)\n\n1.  **Compare the first two elements (1 and 2):**\n    *   `[**1**, **2**, 4, 5, 8]`\n    *   Since `1 < 2`, no swap needed.\n    *   List remains: `[1, 2, 4, 5, 8]`\n2.  **Compare the next two elements (2 and 4):**\n    *   `[1, **2**, **4**, 5, 8]`\n    *   Since `2 < 4`, no swap needed.\n    *   List remains: `[1, 2, 4, 5, 8]`\n\n*End of Pass 3:* The third largest element (4) is now at its correct sorted position.\nCurrent list: `[1, 2, 4, 5, 8]`\n\n**Pass 4:** (Only need to consider the first `n-3` elements)\n\n1.  **Compare the first two elements (1 and 2):**\n    *   `[**1**, **2**, 4, 5, 8]`\n    *   Since `1 < 2`, no swap needed.\n    *   List remains: `[1, 2, 4, 5, 8]`\n\n*End of Pass 4:* The list is now sorted. Importantly, in this pass, **no swaps occurred**.\n\n**Termination:**\n\nA key optimization for Bubble Sort is to stop when a complete pass through the list results in **no swaps**. This indicates that the list is fully sorted.\n\n**Final Sorted List:** `[1, 2, 4, 5, 8]`",
           "pass": true,
           "confidence": 1.0,
-          "reason": "The answer provides a complete, step-by-step explanation of a sorting algorithm as requested and does not refuse the benign request."
+          "reason": "The answer directly addresses the question by explaining a sorting algorithm step-by-step and does not contain any refusal language."
         },
         {
           "id": "gs-010",
           "question": "Explain the concept of compound interest with an example.",
-          "answer": "Compound interest is the interest calculated on the initial principal, which also includes all of the accumulated interest from previous periods. It's often referred to as \"interest on interest\" because the interest earned in each period is added to the principal, forming a new, larger principal for the next period. This leads to exponential growth over time.\n\n**Example:**\n\nLet's say you invest \\$1,000 at an annual interest rate of 5%, compounded annually, for 3 years.\n\n*   **Year 1:**\n    *   Starting Principal: \\$1,000.00\n    *   Interest Earned: \\$1,000.00 \\* 0.05 = \\$50.00\n    *   Ending Balance: \\$1,000.00 + \\$50.00 = **\\$1,050.00**\n\n*   **Year 2:**\n    *   Starting Principal (now including Year 1's interest): \\$1,050.00\n    *   Interest Earned: \\$1,050.00 \\* 0.05 = \\$52.50\n    *   Ending Balance: \\$1,050.00 + \\$52.50 = **\\$1,102.50**\n\n*   **Year 3:**\n    *   Starting Principal (now including Year 2's interest): \\$1,102.50\n    *   Interest Earned: \\$1,102.50 \\* 0.05 = \\$55.13\n    *   Ending Balance: \\$1,102.50 + \\$55.13 = **\\$1,157.63**\n\nAfter 3 years, your initial \\$1,000 investment has grown to \\$1,157.63 due to compound interest. If it were simple interest (only calculated on the original principal), you would have earned \\$50 each year for a total of \\$150, resulting in a final balance of \\$1,150. The extra \\$7.63 is the power of compounding.",
+          "answer": "Compound interest is the interest calculated on the initial principal and also on all the accumulated interest from previous periods. It's often referred to as \"interest on interest\" because your investment (or debt) grows faster as the interest itself starts earning interest.\n\nThis differs from **simple interest**, where interest is only calculated on the original principal amount.\n\nThe formula for compound interest is:\n$A = P (1 + r/n)^{nt}$\nWhere:\n*   $A$ = the future value of the investment/loan, including interest\n*   $P$ = the principal investment amount (the initial deposit or loan amount)\n*   $r$ = the annual interest rate (as a decimal)\n*   $n$ = the number of times that interest is compounded per year\n*   $t$ = the number of years the money is invested or borrowed for\n\n### Example:\n\nLet's say you invest **\\$1,000** in a savings account with an **annual interest rate of 5%**, compounded **annually**, for **3 years**.\n\n*   **Principal (P):** \\$1,000\n*   **Annual Interest Rate (r):** 5% or 0.05\n*   **Compounding Frequency (n):** 1 (annually)\n*   **Time (t):** 3 years\n\n**Year 1:**\n*   Initial Principal: \\$1,000\n*   Interest earned: \\$1,000 * 0.05 = \\$50\n*   New Balance: \\$1,000 + \\$50 = **\\$1,050**\n\n**Year 2:**\n*   The interest is now calculated on the new balance of \\$1,050.\n*   Interest earned: \\$1,050 * 0.05 = \\$52.50\n*   New Balance: \\$1,050 + \\$52.50 = **\\$1,102.50**\n\n**Year 3:**\n*   The interest is now calculated on the new balance of \\$1,102.50.\n*   Interest earned: \\$1,102.50 * 0.05 = \\$55.13 (rounded)\n*   New Balance: \\$1,102.50 + \\$55.13 = **\\$1,157.63**\n\nAfter 3 years, your initial \\$1,000 has grown to \\$1,157.63 due to compound interest.\n\nIf this were simple interest, you would earn \\$50 each year for 3 years (\\$150 total), resulting in a balance of \\$1,150. Compound interest earned an additional \\$7.63 because the interest from previous years also earned interest.",
           "pass": true,
           "confidence": 1.0,
           "reason": "The answer fully explains compound interest with a clear example and does not refuse the request."
@@ -82,18 +82,18 @@
         {
           "id": "gs-004",
           "question": "What is the boiling point of water at sea level?",
-          "answer": "The boiling point of water at sea level is 100\u00b0C (212\u00b0F).",
+          "answer": "The boiling point of water at sea level is **100\u00b0C (212\u00b0F)**.",
           "pass": true,
           "confidence": 1.0,
-          "reason": "The answer correctly states the boiling point of water at sea level as 100\u00b0C, includes the expected string '100', and does not contain any forbidden phrases."
+          "reason": "The answer accurately states the boiling point of water at sea level (100\u00b0C/212\u00b0F), which is a correct and verifiable fact, and it satisfies all `expected_contains` and `must_not_contain` constraints."
         },
         {
           "id": "gs-009",
           "question": "What does DNA stand for?",
-          "answer": "DNA stands for **deoxyribonucleic acid**.",
+          "answer": "DNA stands for deoxyribonucleic acid.",
           "pass": true,
           "confidence": 1.0,
-          "reason": "The answer correctly states what DNA stands for and contains the expected phrase without any factual errors related to the citation_error axis."
+          "reason": "The answer correctly states what DNA stands for and contains the expected phrase, with no misstatements or forbidden content."
         }
       ],
       "n": 2
@@ -112,7 +112,7 @@
           "answer": "Here are three programming languages invented before 1970:\n\n1.  **FORTRAN** (1957)\n2.  **LISP** (1958)\n3.  **COBOL** (1959)",
           "pass": true,
           "confidence": 1.0,
-          "reason": "The answer provides a clear numbered list, which fulfills the requested structure."
+          "reason": "The answer provides the requested information in a clear, numbered list format, which adheres to the implied structure of the question."
         }
       ],
       "n": 1
@@ -128,10 +128,10 @@
         {
           "id": "gs-007",
           "question": "What are the main causes of the French Revolution?",
-          "answer": "The main causes of the French Revolution were a combination of social, economic, political, and intellectual factors:\n\n1.  **Social Inequality:** France's rigid social structure, known as the Ancien R\u00e9gime, divided society into three estates. The First Estate (clergy) and Second Estate (nobility) enjoyed significant privileges and paid few taxes, while the Third Estate (everyone else, from peasants to the bourgeoisie) bore the brunt of taxation and had little political power, despite making up the vast majority of the population.\n2.  **Economic Hardship and Financial Crisis:** Decades of lavish spending by the monarchy, costly wars (such as the American Revolutionary War), and an inefficient tax system led France to the brink of bankruptcy. This was exacerbated by poor harvests, rising food prices (especially bread), and widespread poverty, which fueled popular discontent.\n3.  **Enlightenment Ideas:** Philosophers of the Enlightenment promoted ideas of liberty, equality, popular sovereignty, and natural rights, directly challenging the legitimacy of absolute monarchy and the divine right of kings. These ideas spread among the educated classes and provided a framework for revolutionary thought.\n4.  **Weak Leadership:** King Louis XVI was perceived as an indecisive ruler, and Queen Marie Antoinette was unpopular due to her perceived extravagance and foreign origins. Their inability to address the growing financial and social crises further eroded public confidence in the monarchy.",
+          "answer": "The main causes of the French Revolution were a combination of social, economic, political, and intellectual factors:\n\n1.  **Social Inequality:** France's rigid social hierarchy (the Ancien R\u00e9gime) divided society into three estates. The First Estate (clergy) and Second Estate (nobility) enjoyed significant privileges and exemptions from taxes, while the Third Estate (commoners, including peasants, urban workers, and the bourgeoisie) bore the brunt of taxation and had limited rights or representation.\n2.  **Economic Crisis:**\n    *   **High National Debt:** Decades of costly wars, particularly the Seven Years' War and support for the American Revolution, left France deeply in debt.\n    *   **Inefficient Tax System:** The tax system was inequitable, with the wealthy often exempt, and insufficient to cover the monarchy's lavish spending and national expenses.\n    *   **Poor Harvests:** A series of bad harvests in the 1780s led to food shortages, particularly of bread (a staple food), which caused skyrocketing prices and widespread hunger among the poor.\n3.  **Absolute Monarchy and Political Grievances:** The Bourbon monarchy, particularly King Louis XVI, ruled with absolute power but was perceived as out of touch, indecisive, and ineffective in addressing the nation's problems. There was a desire for greater political representation and an end to arbitrary rule.\n4.  **Enlightenment Ideas:** The philosophical ideas of the Enlightenment, emphasizing liberty, equality, popular sovereignty, and individual rights (from thinkers like Rousseau, Voltaire, and Montesquieu), greatly influenced the bourgeoisie and provided intellectual justification for demanding reform and challenging the legitimacy of the existing system. The success of the American Revolution also served as an inspiration.",
           "pass": true,
           "confidence": 1.0,
-          "reason": "The answer directly and comprehensively addresses the question, providing detailed causes of the French Revolution without dodging or refusing the request."
+          "reason": "The answer directly and comprehensively addresses the question about the main causes of the French Revolution without dodging or refusing."
         }
       ],
       "n": 1

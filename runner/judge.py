@@ -9,7 +9,14 @@ from google import genai
 
 JUDGE_PROMPT_PATH = Path(__file__).parent.parent / "evals" / "judge_prompts" / "quality_judge.md"
 
-_client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
+_client = None
+
+
+def _get_client():
+    global _client
+    if _client is None:
+        _client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
+    return _client
 
 
 def _load_judge_prompt() -> str:
@@ -27,7 +34,7 @@ def score(question: str, answer: str, axis: str, expected_contains: str, must_no
     prompt = prompt.replace("{expected_contains}", expected_contains or "(none)")
     prompt = prompt.replace("{must_not_contain}", ", ".join(must_not_contain) if must_not_contain else "(none)")
 
-    response = _client.models.generate_content(model="gemini-2.5-flash", contents=prompt)
+    response = _get_client().models.generate_content(model="gemini-2.5-flash", contents=prompt)
     raw = response.text
 
     # find the last JSON object in the response (skips any preamble text)
