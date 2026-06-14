@@ -62,10 +62,15 @@ def main():
         BASELINE.write_text(json.dumps(result, indent=2))
         print(f"Baseline updated → {BASELINE}")
 
-    # always print the report
+    # always print and save the report
     comment = build_pr_comment(result, gate, sample_pct)
     print("\n--- PR Comment Preview ---\n")
     print(comment)
+
+    results_dir = ROOT / "results"
+    results_dir.mkdir(exist_ok=True)
+    (results_dir / "latest.md").write_text(comment)
+    print(f"\nReport saved → results/latest.md")
 
     if args.ci and gate["gate"] == "fail":
         sys.exit(1)

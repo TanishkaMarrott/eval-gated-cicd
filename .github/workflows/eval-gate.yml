@@ -6,6 +6,12 @@ on:
       - "examples/**"
       - "evals/**"
       - "runner/**"
+  push:
+    branches: [main]
+    paths:
+      - "examples/**"
+      - "evals/**"
+      - "runner/**"
 
 jobs:
   eval:
@@ -13,6 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
+      contents: write
 
     steps:
       - uses: actions/checkout@v4
@@ -33,17 +40,24 @@ jobs:
           python scripts/run_evals.py --ci 2>&1 | tee eval_output.txt
           echo "exit_code=${PIPESTATUS[0]}" >> $GITHUB_OUTPUT
 
-      - name: Post PR comment
+      - name: Commit results/latest.md
         if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add results/latest.md
+          git diff --cached --quiet || git commit -m "ci: update eval results [skip ci]"
+          git push || true
+
+      - name: Post PR comment
+        if: always() && github.event_name == 'pull_request'
         uses: actions/github-script@v7
         with:
           script: |
             const fs = require('fs');
-            const output = fs.readFileSync('eval_output.txt', 'utf8');
-
-            // extract the PR comment block from output
-            const match = output.match(/--- PR Comment Preview ---\n([\s\S]+)$/);
-            const body = match ? match[1].trim() : `\`\`\`\n${output.slice(-2000)}\n\`\`\``;
+            const body = fs.existsSync('results/latest.md')
+              ? fs.readFileSync('results/latest.md', 'utf8')
+              : fs.readFileSync('eval_output.txt', 'utf8').slice(-2000);
 
             // delete previous bot comment if exists
             const comments = await github.rest.issues.listComments({
